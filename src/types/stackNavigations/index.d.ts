@@ -1,0 +1,4 @@
+type StackParamList = {
+    Splash:undefined
+    
+}

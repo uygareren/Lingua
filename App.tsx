@@ -1,20 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NativeBaseProvider, extendTheme } from 'native-base';
+import React from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { Provider } from 'react-redux';
+import SplashScren from './src/screens/SplashScreen';
+import { store } from './src/store/store';
 
 const App = () => {
-  const [deviceId, setDeviceId] = useState<any>('');
+  type StackParamList = {
+    Splash: undefined;
+  };
 
-  useEffect(() => {
-    // Cihazın benzersiz ID'sini al
-    const uniqueId = DeviceInfo.getUniqueId();
-    setDeviceId(uniqueId);
-  }, []);
+  const Stack = createNativeStackNavigator<StackParamList>();
+  const queryClient = new QueryClient();
+  const theme = extendTheme(DefaultTheme);
 
   return (
-    <View>
-      <Text>Cihaz ID: {deviceId}</Text>
-    </View>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+          <NativeBaseProvider theme={theme}>
+            <NavigationContainer>
+              <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen component={SplashScren} name="Splash" />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </NativeBaseProvider>
+      </Provider>
+    </QueryClientProvider>
   );
 };
 
